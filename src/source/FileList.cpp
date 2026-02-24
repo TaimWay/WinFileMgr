@@ -1,7 +1,20 @@
 // FileList.cpp
+// File list component implementation for FileMgr
+// 
+// Implements the directory browsing functionality with navigation history,
+// file listing, sorting, and integration with Windows shell for file opening.
+// 
+// Key features:
+// - Directory scanning and caching
+// - Back/forward navigation stack
+// - File size formatting (B/KB/MB/GB)
+// - Date/time formatting
+// - Double-click to open files/directories
+// - Integration with IconCache for visual icons
+// 
 
-#include "FileList.h"
-#include "log.h"
+#include "../include/FileList.hpp"
+#include "../include/log.hpp"
 #include <shellapi.h>
 #include <algorithm>
 #include <chrono>

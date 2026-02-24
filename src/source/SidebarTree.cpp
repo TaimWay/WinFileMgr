@@ -1,10 +1,24 @@
 // SidebarTree.cpp
-#include "SidebarTree.h"
+// Sidebar tree component implementation for FileMgr
+// 
+// Implements the hierarchical directory tree view showing all drives and
+// their subdirectories. Uses caching to avoid repeated filesystem scans
+// and provides folder selection callbacks.
+// 
+// Key features:
+// - Shows all logical drives on Windows
+// - Recursive directory tree expansion
+// - Caching of directory contents
+// - Integration with IconCache for drive/folder icons
+// - Click-to-navigate callback system
+// 
+
+#include "../include/SidebarTree.hpp"
 #include <filesystem>
 #include <vector>
 #include <windows.h> // for GetLogicalDrives
 #include <algorithm>
-#include "log.h"
+#include "../include/log.hpp"
 
 namespace fs = std::filesystem;
 

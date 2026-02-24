@@ -15,13 +15,15 @@ include_directories(
 
 file(GLOB_RECURSE IMGUI_SRCS ${IMGUI_DIR}/*.cpp)
 file(GLOB_RECURSE APP_SRCS src/*.cpp)
+file(GLOB APP_RC src/source/*.rc)
 
-add_executable(FileMgr WIN32 ${APP_SRCS} ${IMGUI_SRCS})
+add_executable(FileMgr WIN32 ${APP_SRCS} ${IMGUI_SRCS} ${APP_RC})
 
 target_include_directories(FileMgr PRIVATE
     ${GLFW_DIR}/include
     ${IMGUI_DIR}
     ${IMGUI_DIR}/backends
+    ${CMAKE_SOURCE_DIR}/src/include
 )
 
 target_link_directories(FileMgr PRIVATE ${GLFW_DIR}/lib-mingw-w64)

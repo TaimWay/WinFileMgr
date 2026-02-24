@@ -1,16 +1,34 @@
 // main.cpp
+// FileMgr - Lightweight GUI File Manager for Windows
+// 
+// Main application entry point and window management.
+// 
+// Features:
+// - Modern UI using Dear ImGui with light/dark theme support
+// - File list with icon view, size, and date columns
+// - Sidebar tree view of drives and directories
+// - Navigation history (back/forward)
+// - Windows shell integration for file opening
+// - Custom icon loading and caching
+// 
+// Build requirements:
+// - C++17 compiler
+// - GLFW 3.3+
+// - OpenGL 3.3+
+// - Windows SDK (for shell integration)
+// 
 #include <imgui.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <filesystem>
-#include "log.h"
+#include "include/log.hpp"
 #include <windows.h>
 bool g_ConsoleOutput = false;
-#include "SidebarTree.h"
-#include "FileList.h"
-#include "IconCache.h"
+#include "include/SidebarTree.hpp"
+#include "include/FileList.hpp"
+#include "include/IconCache.hpp"
 
 // Global clear color for background
 static float g_ClearColor[3] = {0.94f, 0.94f, 0.94f};

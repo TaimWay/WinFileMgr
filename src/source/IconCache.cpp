@@ -1,6 +1,19 @@
 // IconCache.cpp
-#include "IconCache.h"
-#include "log.h"
+// Windows icon caching implementation for FileMgr
+// 
+// This file implements the IconCache class which manages extraction of file
+// and folder icons from the Windows shell, converts them to OpenGL textures,
+// and caches them for efficient reuse.
+// 
+// Key features:
+// - Extracts icons using SHGetFileInfo() Windows API
+// - Converts HICON to OpenGL RGBA textures
+// - Caches icons by file extension
+// - Provides fallback default icons
+// - Supports loading custom .ico files for UI buttons
+// 
+#include "../include/IconCache.hpp"
+#include "../include/log.hpp"
 #include <shellapi.h>
 #include <shlobj.h>
 #include <commctrl.h>
