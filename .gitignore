@@ -6,3 +6,6 @@ build
 
 # Remove Runtime's files
 imgui.ini
+
+# Remove some ai's files
+AGENTS.md
