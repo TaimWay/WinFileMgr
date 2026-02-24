@@ -1,5 +1,7 @@
 #include "resource.h"
 
+IDI_SUPERN          ICON        "resource/icon_add.ico"
+IDI_IDI_SUPERY      ICON        "resource/icon_sub.ico"
 IDI_APP             ICON        "resource/icon_app.ico"
 IDI_UP              ICON        "resource/icon_up.ico"
 IDI_REFRESH         ICON        "resource/icon_refresh.ico"
