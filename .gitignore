@@ -1,1 +1,8 @@
-/target
+# Remove IDE (Editor) specific files
+.vscode
+
+# Remove Building files
+build
+
+# Remove Runtime's files
+imgui.ini
