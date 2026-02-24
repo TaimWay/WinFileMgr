@@ -22,6 +22,9 @@ public:
     // Retrieve texture ID for a file/folder path. If not cached, load it.
     ImTextureID GetTexture(const std::filesystem::path& path, bool isFolder);
 
+    // Load icon from ICO file and convert to texture
+    ImTextureID LoadIconFromICO(const std::filesystem::path& icoPath);
+
 private:
     struct IconInfo {
         ImTextureID textureId;

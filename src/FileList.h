@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <vector>
 #include <functional>
+#include <optional>
 #include "IconCache.h"
 
 class FileList {
@@ -22,6 +23,8 @@ public:
 
     bool CanGoBack() const;
     bool CanGoForward() const;
+
+    void RequestNavigation(const std::filesystem::path& path);
 private:
     IconCache* m_iconCache;
     std::filesystem::path m_currentPath;
@@ -37,7 +40,10 @@ private:
     std::vector<std::filesystem::path> m_backStack;
     std::vector<std::filesystem::path> m_forwardStack;
 
+    std::optional<std::filesystem::path> m_pendingNavigation;
+
     void OpenEntry(const FileEntry& entry);
     void RefreshImpl();
     void SetCurrentPath(const std::filesystem::path& newPath);
+    void ProcessPendingNavigation();
 };

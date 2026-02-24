@@ -6,11 +6,12 @@
 #include <algorithm>
 #include <chrono>
 #include <ctime>
+#include <optional>
 
 namespace fs = std::filesystem;
 
 // 构造函数（无需改动，仅初始化 m_iconCache）
-FileList::FileList(IconCache* iconCache) : m_iconCache(iconCache) {
+FileList::FileList(IconCache* iconCache) : m_iconCache(iconCache), m_pendingNavigation() {
     // 初始时可将当前工作目录设为当前路径
     m_currentPath = fs::current_path();
     RefreshImpl();
@@ -142,16 +143,33 @@ void FileList::RefreshImpl() {
         });
 }
 
-// 双击打开条目（文件夹用 NavigateTo，文件用 ShellExecute）
+// 双击打开条目（文件夹延迟导航，文件用 ShellExecute）
 void FileList::OpenEntry(const FileEntry& entry) {
     if (entry.isDirectory) {
-        NavigateTo(entry.path);
+        m_pendingNavigation = entry.path;
     } else {
         ShellExecuteW(nullptr, L"open", entry.path.c_str(), nullptr, nullptr, SW_SHOW);
     }
 }
 
+void FileList::RequestNavigation(const std::filesystem::path& path) {
+    m_pendingNavigation = path;
+}
+
+void FileList::ProcessPendingNavigation() {
+    if (m_pendingNavigation) {
+        NavigateTo(*m_pendingNavigation);
+        m_pendingNavigation.reset();
+    }
+}
+
 void FileList::Draw() {
+    // 使用作用域守卫确保处理待处理导航
+    struct NavigationGuard {
+        FileList* self;
+        ~NavigationGuard() { self->ProcessPendingNavigation(); }
+    } guard{this};
+
     if (m_currentPath.empty()) {
         ImGui::Text("No folder selected.");
         return;

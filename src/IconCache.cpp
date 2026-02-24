@@ -1,5 +1,6 @@
 // IconCache.cpp
 #include "IconCache.h"
+#include "log.h"
 #include <shellapi.h>
 #include <shlobj.h>
 #include <commctrl.h>
@@ -64,6 +65,49 @@ IconCache::~IconCache() {
         glDeleteTextures(1, (GLuint*)&m_defaultFolderIcon);
     if (m_defaultFileIcon)
         glDeleteTextures(1, (GLuint*)&m_defaultFileIcon);
+}
+
+ImTextureID IconCache::LoadIconFromICO(const std::filesystem::path& icoPath) {
+    // 检查缓存
+    std::wstring key = icoPath.wstring();
+    auto it = m_cache.find(key);
+    if (it != m_cache.end()) {
+        return it->second.textureId;
+    }
+
+    // 使用 LoadImageW 加载 ICO 文件
+    HICON hIcon = (HICON)LoadImageW(
+        NULL,
+        icoPath.wstring().c_str(),
+        IMAGE_ICON,
+        16, 16,  // 请求 16x16 图标
+        LR_LOADFROMFILE | LR_SHARED
+    );
+
+    if (!hIcon) {
+        // 尝试加载默认尺寸
+        hIcon = (HICON)LoadImageW(
+            NULL,
+            icoPath.wstring().c_str(),
+            IMAGE_ICON,
+            0, 0,
+            LR_LOADFROMFILE | LR_SHARED | LR_DEFAULTSIZE
+        );
+    }
+
+    if (!hIcon) {
+        LOG_ERROR("Failed to load icon from %s", icoPath.string().c_str());
+        // 缓存失败结果（null）避免重复尝试
+        m_cache[key] = {0, 0, 0};
+        return 0;
+    }
+
+    ImTextureID tex = HICONToTexture(hIcon);
+    DestroyIcon(hIcon);
+
+    // 缓存结果
+    m_cache[key] = {tex, 16, 16};
+    return tex;
 }
 
 ImTextureID IconCache::GetTexture(const std::filesystem::path& path, bool isFolder) {

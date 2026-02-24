@@ -6,6 +6,7 @@
 #include <iostream>
 #include <filesystem>
 #include "log.h"
+#include <windows.h>
 bool g_ConsoleOutput = false;
 #include "SidebarTree.h"
 #include "FileList.h"
@@ -17,7 +18,89 @@ static float g_ClearColor[3] = {0.94f, 0.94f, 0.94f};
 // Theme switching functions
 void SetLightTheme()
 {
-    ImGui::StyleColorsLight();
+    ImGuiStyle& style = ImGui::GetStyle();
+    
+    // Light theme colors
+    ImVec4* colors = style.Colors;
+    colors[ImGuiCol_Text]                   = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    colors[ImGuiCol_TextDisabled]           = ImVec4(0.60f, 0.60f, 0.60f, 1.00f);
+    colors[ImGuiCol_WindowBg]               = ImVec4(0.96f, 0.96f, 0.96f, 1.00f);
+    colors[ImGuiCol_ChildBg]                = ImVec4(0.94f, 0.94f, 0.94f, 1.00f);
+    colors[ImGuiCol_PopupBg]                = ImVec4(0.98f, 0.98f, 0.98f, 0.98f);
+    colors[ImGuiCol_Border]                 = ImVec4(0.80f, 0.80f, 0.80f, 0.50f);
+    colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_FrameBg]                = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+    colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.90f, 0.90f, 0.90f, 0.40f);
+    colors[ImGuiCol_FrameBgActive]          = ImVec4(0.88f, 0.88f, 0.88f, 0.67f);
+    colors[ImGuiCol_TitleBg]                = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
+    colors[ImGuiCol_TitleBgActive]          = ImVec4(0.80f, 0.80f, 0.80f, 1.00f);
+    colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.82f, 0.82f, 0.82f, 0.51f);
+    colors[ImGuiCol_MenuBarBg]              = ImVec4(0.86f, 0.86f, 0.86f, 1.00f);
+    colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.93f, 0.93f, 0.93f, 1.00f);
+    colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.69f, 0.69f, 0.69f, 0.50f);
+    colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.59f, 0.59f, 0.59f, 0.50f);
+    colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.49f, 0.49f, 0.49f, 0.50f);
+    colors[ImGuiCol_CheckMark]              = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    colors[ImGuiCol_SliderGrab]             = ImVec4(0.26f, 0.59f, 0.98f, 0.50f);
+    colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.26f, 0.59f, 0.98f, 0.90f);
+    colors[ImGuiCol_Button]                 = ImVec4(0.90f, 0.90f, 0.90f, 0.40f);
+    colors[ImGuiCol_ButtonHovered]          = ImVec4(0.87f, 0.87f, 0.87f, 1.00f);
+    colors[ImGuiCol_ButtonActive]           = ImVec4(0.84f, 0.84f, 0.84f, 1.00f);
+    colors[ImGuiCol_Header]                 = ImVec4(0.26f, 0.59f, 0.98f, 0.31f);
+    colors[ImGuiCol_HeaderHovered]          = ImVec4(0.26f, 0.59f, 0.98f, 0.51f);
+    colors[ImGuiCol_HeaderActive]           = ImVec4(0.26f, 0.59f, 0.98f, 0.91f);
+    colors[ImGuiCol_Separator]              = ImVec4(0.80f, 0.80f, 0.80f, 0.50f);
+    colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.60f, 0.60f, 0.60f, 0.50f);
+    colors[ImGuiCol_SeparatorActive]        = ImVec4(0.40f, 0.40f, 0.40f, 0.50f);
+    colors[ImGuiCol_ResizeGrip]             = ImVec4(0.70f, 0.70f, 0.70f, 0.50f);
+    colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+    colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+    colors[ImGuiCol_Tab]                    = ImVec4(0.76f, 0.76f, 0.76f, 0.93f);
+    colors[ImGuiCol_TabHovered]             = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
+    colors[ImGuiCol_TabActive]              = ImVec4(0.60f, 0.73f, 0.88f, 1.00f);
+    colors[ImGuiCol_TabUnfocused]           = ImVec4(0.82f, 0.82f, 0.82f, 0.99f);
+    colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.74f, 0.74f, 0.74f, 1.00f);
+
+    colors[ImGuiCol_PlotLines]              = ImVec4(0.39f, 0.39f, 0.39f, 1.00f);
+    colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+    colors[ImGuiCol_PlotHistogram]          = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+    colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+    colors[ImGuiCol_TableHeaderBg]          = ImVec4(0.78f, 0.87f, 0.98f, 1.00f);
+    colors[ImGuiCol_TableRowBg]             = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_TableRowBgAlt]          = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+    colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+    colors[ImGuiCol_DragDropTarget]         = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+    colors[ImGuiCol_NavHighlight]           = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+    colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+    colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
+
+    // Style variables
+    style.WindowPadding            = ImVec2(8.0f, 8.0f);
+    style.FramePadding             = ImVec2(6.0f, 4.0f);
+    style.CellPadding              = ImVec2(4.0f, 2.0f);
+    style.ItemSpacing              = ImVec2(6.0f, 4.0f);
+    style.ItemInnerSpacing         = ImVec2(4.0f, 4.0f);
+    style.TouchExtraPadding        = ImVec2(0.0f, 0.0f);
+    style.IndentSpacing            = 21.0f;
+    style.ScrollbarSize            = 14.0f;
+    style.GrabMinSize              = 10.0f;
+    style.WindowBorderSize         = 1.0f;
+    style.ChildBorderSize          = 1.0f;
+    style.PopupBorderSize          = 1.0f;
+    style.FrameBorderSize          = 0.0f;
+    style.TabBorderSize            = 0.0f;
+    style.WindowRounding           = 6.0f;
+    style.ChildRounding            = 4.0f;
+    style.FrameRounding            = 4.0f;
+    style.PopupRounding            = 4.0f;
+    style.ScrollbarRounding        = 4.0f;
+    style.GrabRounding             = 4.0f;
+    style.TabRounding              = 4.0f;
+    style.WindowTitleAlign         = ImVec2(0.5f, 0.5f);
+    style.ButtonTextAlign          = ImVec2(0.5f, 0.5f);
+    style.SelectableTextAlign      = ImVec2(0.0f, 0.0f);
+
     g_ClearColor[0] = 0.94f;
     g_ClearColor[1] = 0.94f;
     g_ClearColor[2] = 0.94f;
@@ -25,10 +108,92 @@ void SetLightTheme()
 
 void SetDarkTheme()
 {
-    ImGui::StyleColorsDark();
-    g_ClearColor[0] = 0.1f;
-    g_ClearColor[1] = 0.1f;
-    g_ClearColor[2] = 0.1f;
+    ImGuiStyle& style = ImGui::GetStyle();
+    
+    // Dark theme colors
+    ImVec4* colors = style.Colors;
+    colors[ImGuiCol_Text]                   = ImVec4(0.95f, 0.95f, 0.95f, 1.00f);
+    colors[ImGuiCol_TextDisabled]           = ImVec4(0.50f, 0.50f, 0.50f, 1.00f);
+    colors[ImGuiCol_WindowBg]               = ImVec4(0.12f, 0.12f, 0.12f, 1.00f);
+    colors[ImGuiCol_ChildBg]                = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    colors[ImGuiCol_PopupBg]                = ImVec4(0.14f, 0.14f, 0.14f, 0.98f);
+    colors[ImGuiCol_Border]                 = ImVec4(0.30f, 0.30f, 0.30f, 0.50f);
+    colors[ImGuiCol_BorderShadow]           = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_FrameBg]                = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+    colors[ImGuiCol_FrameBgHovered]         = ImVec4(0.28f, 0.28f, 0.28f, 0.40f);
+    colors[ImGuiCol_FrameBgActive]          = ImVec4(0.32f, 0.32f, 0.32f, 0.67f);
+    colors[ImGuiCol_TitleBg]                = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    colors[ImGuiCol_TitleBgActive]          = ImVec4(0.16f, 0.16f, 0.16f, 1.00f);
+    colors[ImGuiCol_TitleBgCollapsed]       = ImVec4(0.10f, 0.10f, 0.10f, 0.51f);
+    colors[ImGuiCol_MenuBarBg]              = ImVec4(0.14f, 0.14f, 0.14f, 1.00f);
+    colors[ImGuiCol_ScrollbarBg]            = ImVec4(0.10f, 0.10f, 0.10f, 1.00f);
+    colors[ImGuiCol_ScrollbarGrab]          = ImVec4(0.40f, 0.40f, 0.40f, 0.50f);
+    colors[ImGuiCol_ScrollbarGrabHovered]   = ImVec4(0.50f, 0.50f, 0.50f, 0.50f);
+    colors[ImGuiCol_ScrollbarGrabActive]    = ImVec4(0.60f, 0.60f, 0.60f, 0.50f);
+    colors[ImGuiCol_CheckMark]              = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    colors[ImGuiCol_SliderGrab]             = ImVec4(0.40f, 0.40f, 0.40f, 0.50f);
+    colors[ImGuiCol_SliderGrabActive]       = ImVec4(0.50f, 0.50f, 0.50f, 0.90f);
+    colors[ImGuiCol_Button]                 = ImVec4(0.28f, 0.28f, 0.28f, 0.40f);
+    colors[ImGuiCol_ButtonHovered]          = ImVec4(0.35f, 0.35f, 0.35f, 1.00f);
+    colors[ImGuiCol_ButtonActive]           = ImVec4(0.40f, 0.40f, 0.40f, 1.00f);
+    colors[ImGuiCol_Header]                 = ImVec4(0.26f, 0.59f, 0.98f, 0.31f);
+    colors[ImGuiCol_HeaderHovered]          = ImVec4(0.26f, 0.59f, 0.98f, 0.51f);
+    colors[ImGuiCol_HeaderActive]           = ImVec4(0.26f, 0.59f, 0.98f, 0.91f);
+    colors[ImGuiCol_Separator]              = ImVec4(0.30f, 0.30f, 0.30f, 0.50f);
+    colors[ImGuiCol_SeparatorHovered]       = ImVec4(0.50f, 0.50f, 0.50f, 0.50f);
+    colors[ImGuiCol_SeparatorActive]        = ImVec4(0.70f, 0.70f, 0.70f, 0.50f);
+    colors[ImGuiCol_ResizeGrip]             = ImVec4(0.40f, 0.40f, 0.40f, 0.50f);
+    colors[ImGuiCol_ResizeGripHovered]      = ImVec4(0.26f, 0.59f, 0.98f, 0.67f);
+    colors[ImGuiCol_ResizeGripActive]       = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+    colors[ImGuiCol_Tab]                    = ImVec4(0.16f, 0.16f, 0.16f, 0.93f);
+    colors[ImGuiCol_TabHovered]             = ImVec4(0.26f, 0.59f, 0.98f, 0.80f);
+    colors[ImGuiCol_TabActive]              = ImVec4(0.20f, 0.40f, 0.68f, 1.00f);
+    colors[ImGuiCol_TabUnfocused]           = ImVec4(0.12f, 0.12f, 0.12f, 0.99f);
+    colors[ImGuiCol_TabUnfocusedActive]     = ImVec4(0.18f, 0.18f, 0.18f, 1.00f);
+
+    colors[ImGuiCol_PlotLines]              = ImVec4(0.61f, 0.61f, 0.61f, 1.00f);
+    colors[ImGuiCol_PlotLinesHovered]       = ImVec4(1.00f, 0.43f, 0.35f, 1.00f);
+    colors[ImGuiCol_PlotHistogram]          = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
+    colors[ImGuiCol_PlotHistogramHovered]   = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
+    colors[ImGuiCol_TableHeaderBg]          = ImVec4(0.20f, 0.20f, 0.20f, 1.00f);
+    colors[ImGuiCol_TableRowBg]             = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
+    colors[ImGuiCol_TableRowBgAlt]          = ImVec4(1.00f, 1.00f, 1.00f, 0.06f);
+    colors[ImGuiCol_TextSelectedBg]         = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+    colors[ImGuiCol_DragDropTarget]         = ImVec4(1.00f, 1.00f, 0.00f, 0.90f);
+    colors[ImGuiCol_NavHighlight]           = ImVec4(0.26f, 0.59f, 0.98f, 1.00f);
+    colors[ImGuiCol_NavWindowingHighlight]  = ImVec4(1.00f, 1.00f, 1.00f, 0.70f);
+    colors[ImGuiCol_NavWindowingDimBg]      = ImVec4(0.80f, 0.80f, 0.80f, 0.20f);
+    colors[ImGuiCol_ModalWindowDimBg]       = ImVec4(0.20f, 0.20f, 0.20f, 0.35f);
+
+    // Style variables (same as light theme for consistency)
+    style.WindowPadding            = ImVec2(8.0f, 8.0f);
+    style.FramePadding             = ImVec2(6.0f, 4.0f);
+    style.CellPadding              = ImVec2(4.0f, 2.0f);
+    style.ItemSpacing              = ImVec2(6.0f, 4.0f);
+    style.ItemInnerSpacing         = ImVec2(4.0f, 4.0f);
+    style.TouchExtraPadding        = ImVec2(0.0f, 0.0f);
+    style.IndentSpacing            = 21.0f;
+    style.ScrollbarSize            = 14.0f;
+    style.GrabMinSize              = 10.0f;
+    style.WindowBorderSize         = 1.0f;
+    style.ChildBorderSize          = 1.0f;
+    style.PopupBorderSize          = 1.0f;
+    style.FrameBorderSize          = 0.0f;
+    style.TabBorderSize            = 0.0f;
+    style.WindowRounding           = 6.0f;
+    style.ChildRounding            = 4.0f;
+    style.FrameRounding            = 4.0f;
+    style.PopupRounding            = 4.0f;
+    style.ScrollbarRounding        = 4.0f;
+    style.GrabRounding             = 4.0f;
+    style.TabRounding              = 4.0f;
+    style.WindowTitleAlign         = ImVec2(0.5f, 0.5f);
+    style.ButtonTextAlign          = ImVec2(0.5f, 0.5f);
+    style.SelectableTextAlign      = ImVec2(0.0f, 0.0f);
+
+    g_ClearColor[0] = 0.12f;
+    g_ClearColor[1] = 0.12f;
+    g_ClearColor[2] = 0.12f;
 }
 
 int main(int argc, char **argv)
@@ -67,11 +232,40 @@ int main(int argc, char **argv)
 
     SetLightTheme();
 
+    // Load a nicer font (Segoe UI on Windows)
+    ImFont* font = nullptr;
+    std::string fontPath = "C:\\Windows\\Fonts\\segoeui.ttf";
+    if (std::filesystem::exists(fontPath))
+    {
+        font = io.Fonts->AddFontFromFileTTF(fontPath.c_str(), 16.0f);
+    }
+    if (!font)
+    {
+        // Fallback to default font
+        io.Fonts->AddFontDefault();
+    }
+
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
     // Create shared icon cache
     IconCache iconCache;
+
+    // Load button icons
+    ImTextureID iconBack = 0;
+    ImTextureID iconForward = 0;
+    ImTextureID iconUp = 0;
+    ImTextureID iconRefresh = 0;
+    try {
+        namespace fs = std::filesystem;
+        fs::path resourceDir = "src/resource";
+        iconBack = iconCache.LoadIconFromICO(resourceDir / "icon_sub.ico");
+        iconForward = iconCache.LoadIconFromICO(resourceDir / "icon_add.ico");
+        iconUp = iconCache.LoadIconFromICO(resourceDir / "icon_up.ico");
+        iconRefresh = iconCache.LoadIconFromICO(resourceDir / "icon_refresh.ico");
+    } catch (const std::exception& e) {
+        LOG_ERROR("Failed to load button icons: %s", e.what());
+    }
 
     // Create sidebar tree and file list, passing the icon cache
     SidebarTree sidebar(&iconCache);
@@ -79,7 +273,7 @@ int main(int argc, char **argv)
 
     // Set callback when a folder is selected in the sidebar
     sidebar.SetOnFolderSelected([&](const std::filesystem::path &folder)
-                                { fileList.NavigateTo(folder); });
+                                { fileList.RequestNavigation(folder); });
 
     // Initially set file list to current working directory
     fileList.NavigateTo(std::filesystem::current_path());
@@ -119,18 +313,41 @@ int main(int argc, char **argv)
                          ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
                          ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus);
 
-        if (ImGui::Button("Back"))
-        {
+        // Back button
+        bool backClicked = false;
+        if (iconBack) {
+            backClicked = ImGui::ImageButton("##back", iconBack, ImVec2(16, 16));
+            if (ImGui::IsItemHovered()) ImGui::SetTooltip("Back");
+        } else {
+            backClicked = ImGui::Button("Back");
+        }
+        if (backClicked) {
             fileList.GoBack();
         }
         ImGui::SameLine();
-        if (ImGui::Button("Forward"))
-        {
+        
+        // Forward button
+        bool forwardClicked = false;
+        if (iconForward) {
+            forwardClicked = ImGui::ImageButton("##forward", iconForward, ImVec2(16, 16));
+            if (ImGui::IsItemHovered()) ImGui::SetTooltip("Forward");
+        } else {
+            forwardClicked = ImGui::Button("Forward");
+        }
+        if (forwardClicked) {
             fileList.GoForward();
         }
         ImGui::SameLine();
-        if (ImGui::Button("Up"))
-        {
+        
+        // Up button
+        bool upClicked = false;
+        if (iconUp) {
+            upClicked = ImGui::ImageButton("##up", iconUp, ImVec2(16, 16));
+            if (ImGui::IsItemHovered()) ImGui::SetTooltip("Up");
+        } else {
+            upClicked = ImGui::Button("Up");
+        }
+        if (upClicked) {
             std::filesystem::path parent = fileList.GetCurrentPath().parent_path();
             if (parent != fileList.GetCurrentPath())
             {
@@ -138,8 +355,16 @@ int main(int argc, char **argv)
             }
         }
         ImGui::SameLine();
-        if (ImGui::Button("Refresh"))
-        {
+        
+        // Refresh button
+        bool refreshClicked = false;
+        if (iconRefresh) {
+            refreshClicked = ImGui::ImageButton("##refresh", iconRefresh, ImVec2(16, 16));
+            if (ImGui::IsItemHovered()) ImGui::SetTooltip("Refresh");
+        } else {
+            refreshClicked = ImGui::Button("Refresh");
+        }
+        if (refreshClicked) {
             fileList.Refresh();
         }
         ImGui::SameLine();
